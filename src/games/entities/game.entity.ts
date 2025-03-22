@@ -3,10 +3,10 @@ import { Document } from 'mongoose';
 
 // Enumeraciones para Platform y Genre
 export enum Genre {
-  Action = "Action",
-  Adventure = "Adventure",
-  Racing = "Racing",
-  Indie = "Indie"
+  Action = "action",
+  Adventure = "adventure",
+  Racing = "racing",
+  Indie = "indie"
 }
 
 export enum Platform {

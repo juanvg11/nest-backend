@@ -22,6 +22,12 @@ export class GamesController {
     return this.gamesService.findOne(uuid);
   }
 
+  @Get('genre/:genre')  // Nueva ruta para filtrar por género
+  findByGenre(@Param('genre') genre: string) {
+  return this.gamesService.findByGenre(genre);
+}
+
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
     return this.gamesService.update(id, updateGameDto);

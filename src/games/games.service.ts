@@ -40,6 +40,11 @@ export class GamesService {
     }
   }
 
+  async findByGenre(genre: string): Promise<Game[]> {
+    return this.gameModel.find({ genre: genre.toLocaleLowerCase() }).lean().exec();
+  }
+  
+
   /* async remove(id: string): Promise<Game> {
     const deletedGame = await this.gameModel.findByIdAndDelete(id).lean().exec();
     if (!deletedGame) {
