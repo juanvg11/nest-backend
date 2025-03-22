@@ -2,6 +2,10 @@ import { IsString, IsNumber, IsBoolean, IsArray, IsEnum, IsOptional, Min, Max, A
 import { Genre, Platform } from '../entities/game.entity';
 
 export class CreateGameDto {
+
+  @IsString()
+  uuid: string;
+
   @IsString()
   title: string;
 

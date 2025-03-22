@@ -17,6 +17,9 @@ export enum Platform {
 // Modelo de Game con Mongoose
 @Schema({ timestamps: true }) // Agrega createdAt y updatedAt automáticamente
 export class Game extends Document{
+
+  @Prop({ required:true, unique:true})
+  uuid: string;
   
   @Prop({  required: true, unique: true })
   title: string;

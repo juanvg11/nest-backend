@@ -26,21 +26,21 @@ export class GamesService {
     return this.gameModel.find().lean().exec();
   }
 
-  async findOne(id: string): Promise<Game|null> {
+  async findOne(uuid: string): Promise<Game|null> {
     try {
-      const game = await this.gameModel.findById(id).lean().exec();
+      const game = await this.gameModel.findOne({uuid}).lean().exec();
      
       return game;
     } catch (error) {
       if (error.name === 'CastError') {
-        throw new BadRequestException(`El juego con id:${id} no se encuentra`);
+        throw new BadRequestException(`El juego con id:${uuid} no se encuentra`);
       }
       console.error('Error in update method:', error);
-      throw new BadRequestException(`Invalid ID format or game not found: ${id}`);
+      throw new BadRequestException(`Invalid ID format or game not found: ${uuid}`);
     }
   }
 
-  a/* sync remove(id: string): Promise<Game> {
+  /* async remove(id: string): Promise<Game> {
     const deletedGame = await this.gameModel.findByIdAndDelete(id).lean().exec();
     if (!deletedGame) {
       throw new NotFoundException(`Game with ID ${id} not found`);
@@ -50,16 +50,16 @@ export class GamesService {
   
   
  
-  async update(id: string, updateGameDto: UpdateGameDto) {
+  async update(uuid: string, updateGameDto: UpdateGameDto) {
     try {
       const updatedGame = await this.gameModel
-        .findByIdAndUpdate(id, updateGameDto, { new: true })
+        .findByIdAndUpdate(uuid, updateGameDto, { new: true })
         .lean()
         .exec();
       return updatedGame;
     } catch (error) {
       if (error.name === 'CastError') {
-        throw new BadRequestException(`El id:${id} es erroneo`);
+        throw new BadRequestException(`El id:${uuid} es erroneo`);
       }
 
       if(error.code === 11000){
@@ -67,7 +67,7 @@ export class GamesService {
       }
 
       console.error('Error in update method:', error);
-      throw new BadRequestException(`Invalid ID format or game not found: ${id}`);
+      throw new BadRequestException(`Invalid ID format or game not found: ${uuid}`);
     }
     
   }

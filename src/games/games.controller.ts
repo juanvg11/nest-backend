@@ -17,9 +17,9 @@ export class GamesController {
     return this.gamesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gamesService.findOne(id);
+  @Get(':uuid')
+  findOne(@Param('uuid') uuid: string) {
+    return this.gamesService.findOne(uuid);
   }
 
   @Patch(':id')
