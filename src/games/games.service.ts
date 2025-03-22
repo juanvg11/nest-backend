@@ -86,6 +86,10 @@ export class GamesService {
         throw new BadRequestException(`Game with ID ${id} not found`);
     }
    
-  } 
+  }
+  
+  async markAsFavorite(uuid: string): Promise<Game|null> {
+    return this.gameModel.findOneAndUpdate({ uuid }, { favorite: true }, { new: true });
+  }
 
 }

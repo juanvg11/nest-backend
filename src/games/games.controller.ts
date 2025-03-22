@@ -33,6 +33,11 @@ export class GamesController {
     return this.gamesService.update(id, updateGameDto);
   }
 
+  @Patch(':uuid/favorite')
+  async markAsFavorite(@Param('uuid') uuid: string) {
+    return this.gamesService.markAsFavorite(uuid);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gamesService.remove(id);
