@@ -22,11 +22,17 @@ export class GamesController {
     return this.gamesService.findOne(uuid);
   }
 
+ 
+
   @Get('genre/:genre')  // Nueva ruta para filtrar por género
   findByGenre(@Param('genre') genre: string) {
   return this.gamesService.findByGenre(genre);
 }
 
+@Get('favorite/:favorite')
+getFavoriteGames(@Param('favorite') favorite: string) {
+ return this.gamesService.getFavorites(favorite);
+}
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {

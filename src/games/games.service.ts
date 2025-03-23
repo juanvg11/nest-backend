@@ -88,8 +88,33 @@ export class GamesService {
    
   }
   
-  async markAsFavorite(uuid: string): Promise<Game|null> {
-    return this.gameModel.findOneAndUpdate({ uuid }, { favorite: true }, { new: true });
+  async markAsFavorite(uuid: string): Promise<Game | null> {
+    // Actualiza el campo 'favorite' a true para marcarlo como favorito
+    const updatedGame = await this.gameModel.findOneAndUpdate(
+      { uuid },
+      { favorite: true },
+      { new: true }
+    ).lean().exec();
+  
+    if (!updatedGame) {
+      throw new NotFoundException(`Game with UUID ${uuid} not found`);
+    }
+  
+    return updatedGame;
   }
+  
+
+  async getFavorites(favorite: string): Promise<Game[]> {
+    return this.gameModel.find({ favorite: favorite.toLowerCase()}).lean().exec();
+    
+  }
+
+  /* async findByGenre(genre: string): Promise<Game[]> {
+    return this.gameModel.find({ genre: genre.toLocaleLowerCase() }).lean().exec();
+  } */
+
+  /* async findByGenre(genre: string): Promise<Game[]> {
+    return this.gameModel.find({ genre: genre.toLocaleLowerCase() }).lean().exec();
+  } */
 
 }
