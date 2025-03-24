@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+
 
 @Controller('games')
 export class GamesController {
@@ -22,7 +23,13 @@ export class GamesController {
     return this.gamesService.findOne(uuid);
   }
 
- 
+
+
+  @Get('search/:search')
+async searchGames(@Param('search') search: string) {
+  console.log(`Búsqueda: ${search}`);
+  return this.gamesService.searchGames(search);
+}
 
   @Get('genre/:genre')  // Nueva ruta para filtrar por género
   findByGenre(@Param('genre') genre: string) {

@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Game } from './entities/game.entity';
 import mongoose, { Model } from 'mongoose';
 import { error } from 'console';
+import { title } from 'process';
 
 @Injectable()
 export class GamesService {
@@ -123,6 +124,38 @@ export class GamesService {
     return this.gameModel.find({ favorite: favorite.toLowerCase()}).lean().exec();
     
   }
+
+  async searchGames(query: string): Promise<Game[]> {
+    try {
+      console.log(`Búsqueda con el término: ${query}`);
+      return await this.gameModel.find(
+        { title: { $regex: query, $options: 'i' } } 
+      ).lean().exec();
+    } catch (error) {
+      console.error('Error en la búsqueda:', error);
+      throw new InternalServerErrorException('Error en la búsqueda');
+    }
+  }
+
+  /* async findByGenre(genre: string): Promise<Game[]> {
+    return this.gameModel.find({ genre: genre.toLocaleLowerCase() }).lean().exec();
+  } */
+  
+
+  /* async findOne(uuid: string): Promise<Game|null> {
+    try {
+      const game = await this.gameModel.findOne({uuid}).lean().exec();
+     
+      return game;
+    } catch (error) {
+      if (error.name === 'CastError') {
+        throw new BadRequestException(`El juego con id:${uuid} no se encuentra`);
+      }
+      console.error('Error in update method:', error);
+      throw new BadRequestException(`Invalid ID format or game not found: ${uuid}`);
+    }
+  } */
+  
 
 
 
