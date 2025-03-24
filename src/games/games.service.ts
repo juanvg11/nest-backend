@@ -88,11 +88,11 @@ export class GamesService {
    
   }
   
-  async markAsFavorite(uuid: string): Promise<Game | null> {
+  async markAsFavorite(uuid: string, UpdateGameDto: UpdateGameDto): Promise<Game> {
     // Actualiza el campo 'favorite' a true para marcarlo como favorito
     const updatedGame = await this.gameModel.findOneAndUpdate(
       { uuid },
-      { favorite: true },
+      { favorite: UpdateGameDto.favorite },
       { new: true }
     ).lean().exec();
   
@@ -102,12 +102,29 @@ export class GamesService {
   
     return updatedGame;
   }
+
+  async ratingGame(uuid: string, UpdateGameDto: UpdateGameDto): Promise<Game> {
+    // Actualiza el campo 'favorite' a true para marcarlo como favorito
+    const ratingGame = await this.gameModel.findOneAndUpdate(
+      { uuid },
+      { rating: UpdateGameDto.rating },
+      { new: true }
+    ).lean().exec();
+  
+    if (!ratingGame) {
+      throw new NotFoundException(`Game with UUID ${uuid} not found`);
+    }
+  
+    return ratingGame;
+  }
   
 
   async getFavorites(favorite: string): Promise<Game[]> {
     return this.gameModel.find({ favorite: favorite.toLowerCase()}).lean().exec();
     
   }
+
+
 
   /* async findByGenre(genre: string): Promise<Game[]> {
     return this.gameModel.find({ genre: genre.toLocaleLowerCase() }).lean().exec();

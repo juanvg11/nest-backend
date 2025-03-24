@@ -29,23 +29,30 @@ export class GamesController {
   return this.gamesService.findByGenre(genre);
 }
 
-@Get('favorite/:favorite')
-getFavoriteGames(@Param('favorite') favorite: string) {
- return this.gamesService.getFavorites(favorite);
-}
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
     return this.gamesService.update(id, updateGameDto);
   }
 
+  @Get('favorite/:favorite')
+getFavoriteGames(@Param('favorite') favorite: string) {
+ return this.gamesService.getFavorites(favorite);
+}
+
   @Patch(':uuid/favorite')
-  async markAsFavorite(@Param('uuid') uuid: string) {
-    return this.gamesService.markAsFavorite(uuid);
+  async markAsFavorite(@Param('uuid') uuid: string, @Body() updateGameDto: UpdateGameDto) {
+    return this.gamesService.markAsFavorite(uuid, updateGameDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gamesService.remove(id);
+  }
+
+  @Patch(':uuid/rating')
+  async ratingGame(@Param('uuid') uuid: string, @Body() updateGameDto: UpdateGameDto) {
+    return this.gamesService.ratingGame(uuid, updateGameDto);
   }
 }
