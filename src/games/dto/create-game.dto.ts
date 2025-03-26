@@ -38,6 +38,9 @@ export class CreateGameDto {
   @IsBoolean()
   favorite: boolean;
 
+  @IsBoolean()
+  isVisible: boolean;
+
   @IsNumber()
   @Min(0)
   @Max(10)

@@ -104,6 +104,21 @@ export class GamesService {
     return updatedGame;
   }
 
+  async markAsVisible(uuid: string, UpdateGameDto: UpdateGameDto): Promise<Game> {
+    // Actualiza el campo 'favorite' a true para marcarlo como favorito
+    const updatedGame = await this.gameModel.findOneAndUpdate(
+      { uuid },
+      { isVisible: UpdateGameDto.isVisible },
+      { new: true }
+    ).lean().exec();
+  
+    if (!updatedGame) {
+      throw new NotFoundException(`Game with UUID ${uuid} not found`);
+    }
+  
+    return updatedGame;
+  }
+
   async ratingGame(uuid: string, UpdateGameDto: UpdateGameDto): Promise<Game> {
     // Actualiza el campo 'favorite' a true para marcarlo como favorito
     const ratingGame = await this.gameModel.findOneAndUpdate(
@@ -122,6 +137,11 @@ export class GamesService {
 
   async getFavorites(favorite: string): Promise<Game[]> {
     return this.gameModel.find({ favorite: favorite.toLowerCase()}).lean().exec();
+    
+  }
+
+  async getVisible(visible: string): Promise<Game[]> {
+    return this.gameModel.find({ isVisible: visible.toLowerCase()}).lean().exec();
     
   }
 

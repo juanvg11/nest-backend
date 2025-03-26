@@ -53,6 +53,16 @@ getFavoriteGames(@Param('favorite') favorite: string) {
     return this.gamesService.markAsFavorite(uuid, updateGameDto);
   }
 
+  @Get('visible/:visible')
+getGameVisible(@Param('visible') visible: string) {
+ return this.gamesService.getVisible(visible);
+}
+
+@Patch(':uuid/visible')
+  async markAsVisible(@Param('uuid') uuid: string, @Body() updateGameDto: UpdateGameDto) {
+    return this.gamesService.markAsVisible(uuid, updateGameDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gamesService.remove(id);

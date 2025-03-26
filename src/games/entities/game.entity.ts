@@ -50,6 +50,10 @@ export class Game extends Document{
 
   @Prop({ required: true, min: 0, max: 10 })
   rating: number;
+
+  @Prop({ default: false })
+  isVisible: boolean;
+
 }
 
 // Genera el esquema de Mongoose
