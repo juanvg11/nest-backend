@@ -2,17 +2,63 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 // Enumeraciones para Platform y Genre
-export enum Genre {
+/* export enum Genre {
   Action = "action",
   Adventure = "adventure",
   Racing = "racing",
   Indie = "indie"
-}
+} */
 
-export enum Platform {
+ export enum Genre {
+    Action = "action",
+    Adventure = "adventure",
+    Shooter = "shooter",
+    RPG = "rpg",
+    Strategy = "strategy",
+    Fighting = "fighting",
+    Simulation = "simulation",
+    Racing = "racing",
+    Sports = "sports",
+    Horror = "horror",
+    Platformer = "platformer",
+    Sandbox = "sandbox",
+    Puzzle = "puzzle",
+    MMORPG = "mmorpg",
+    BattleRoyale = "battle royale",
+    Stealth = "stealth",
+    Survival = "survival",
+    MusicRhythm = "music/rhythm",
+    MOBA = "moba"
+  }
+  
+
+/* export enum Platform {
   Ps4 = "PS4",
   Ps5 = "PS5",
-}
+} */
+
+  export enum Platform {
+    PS5 = "PS5",
+    PS4 = "PS4",
+    XboxSeriesX = "Xbox Series X",
+    XboxSeriesS = "Xbox Series S",
+    XboxOne = "Xbox One",
+    Switch = "Nintendo Switch",
+    PC = "PC",
+    Mobile = "Mobile",
+    Nintendo3DS = "Nintendo 3DS",
+    WiiU = "Nintendo Wii U",
+    Xbox360 = "Xbox 360",
+    PSvita = "PlayStation Vita",
+    PCVR = "PC VR",
+    PlayStationVR = "PlayStation VR",
+    SteamDeck = "Steam Deck",
+    Stadia = "Google Stadia",
+    Luna = "Amazon Luna",
+    Mac = "Mac",
+    Linux = "Linux"
+  }
+  
 
 // Modelo de Game con Mongoose
 @Schema({ timestamps: true }) // Agrega createdAt y updatedAt automáticamente

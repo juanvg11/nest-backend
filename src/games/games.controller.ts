@@ -13,6 +13,10 @@ export class GamesController {
     return this.gamesService.create(createGameDto);
   }
 
+
+
+  
+
   @Get()
   findAll() {
     return this.gamesService.findAll();
