@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import { Genre } from './entities/game.entity';
 
 
 @Controller('games')
@@ -18,8 +19,8 @@ export class GamesController {
   
 
   @Get()
-  findAll() {
-    return this.gamesService.findAll();
+  findAll(@Query('genre') genre: Genre, @Query('favorite') favorite: boolean, @Query('search') search: string) {
+    return this.gamesService.findAll({genre, favorite, search});
   }
 
   @Get(':uuid')

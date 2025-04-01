@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Game } from './entities/game.entity';
+import { Game, Genre } from './entities/game.entity';
 import  { Model } from 'mongoose';
 
 
@@ -27,8 +27,16 @@ export class GamesService {
 
   /* Recupera todos los juegos de la BD
      Mejora: implementar paginacion con .skip() y .limit() */
-  async findAll(): Promise<Game[]> {
-    return this.gameModel.find().lean().exec();
+  async findAll({genre, favorite, search}: {genre?: Genre, favorite?: boolean | string, search?:string}): Promise<Game[]> {
+    const filters: any = [];
+    if (genre) filters.push({ genre });
+    if (favorite) filters.push({favorite: favorite === 'true'})
+    if (search) filters.push({  title: { $regex: search, $options: 'i' } });
+
+    return this.gameModel.find({
+      $and: filters
+      
+    }).lean().exec();
   }
 
 
