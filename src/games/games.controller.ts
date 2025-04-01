@@ -19,8 +19,8 @@ export class GamesController {
   
 
   @Get()
-  findAll(@Query('genre') genre: Genre, @Query('favorite') favorite: boolean, @Query('search') search: string) {
-    return this.gamesService.findAll({genre, favorite, search});
+  findAll(@Query('genre') genre: Genre, @Query('favorite') favorite: boolean, @Query('search') search: string,  @Query('visible') visible: boolean) {
+    return this.gamesService.findAll({genre, favorite, search, visible});
   }
 
   @Get(':uuid')

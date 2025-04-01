@@ -27,11 +27,12 @@ export class GamesService {
 
   /* Recupera todos los juegos de la BD
      Mejora: implementar paginacion con .skip() y .limit() */
-  async findAll({genre, favorite, search}: {genre?: Genre, favorite?: boolean | string, search?:string}): Promise<Game[]> {
+  async findAll({genre, favorite, search, visible}: {genre?: Genre, favorite?: boolean | string, search?:string, visible?: boolean | string}): Promise<Game[]> {
     const filters: any = [];
     if (genre) filters.push({ genre });
     if (favorite) filters.push({favorite: favorite === 'true'})
     if (search) filters.push({  title: { $regex: search, $options: 'i' } });
+    if (visible) filters.push({ isVisible: visible === 'true'})
 
     return this.gameModel.find({
       $and: filters
