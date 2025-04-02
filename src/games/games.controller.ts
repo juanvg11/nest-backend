@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
-import { Genre } from './entities/game.entity';
+import { Game, Genre } from './entities/game.entity';
 
 
 @Controller('games')
@@ -18,10 +18,31 @@ export class GamesController {
 
   
 
-  @Get()
+  /* @Get()
   findAll(@Query('genre') genre: Genre, @Query('favorite') favorite: boolean, @Query('search') search: string,  @Query('visible') visible: boolean) {
     return this.gamesService.findAll({genre, favorite, search, visible});
-  }
+  } */
+ 
+    @Get()
+    async findAll(
+      @Query('genre') genre?: Genre,
+      @Query('favorite') favorite?: boolean,
+      @Query('search') search?: string,
+      @Query('visible') visible?: boolean,
+      @Query('limit') limit?: number,
+      @Query('offset') offset?: number
+    ): Promise<{ count: number; pages: number; games: Game[] }> {
+  
+      return this.gamesService.findAll({
+        genre,
+        favorite,
+        search,
+        visible,
+        limit: Number(limit) || 10,   // Convertir a número y poner valor por defecto
+        offset: Number(offset) || 0,  // Convertir a número y poner valor por defecto
+      });
+    }
+
 
   @Get(':uuid')
   findOne(@Param('uuid') uuid: string) {

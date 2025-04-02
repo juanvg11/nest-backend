@@ -4,6 +4,7 @@ import { UpdateGameDto } from './dto/update-game.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Game, Genre } from './entities/game.entity';
 import  { Model } from 'mongoose';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 
 @Injectable()
@@ -27,7 +28,8 @@ export class GamesService {
 
   /* Recupera todos los juegos de la BD
      Mejora: implementar paginacion con .skip() y .limit() */
-  async findAll({genre, favorite, search, visible}: {genre?: Genre, favorite?: boolean | string, search?:string, visible?: boolean | string}): Promise<Game[]> {
+  /* async findAll({genre, favorite, search, visible}: {genre?: Genre, favorite?: boolean | string, search?:string, visible?: boolean | string}): Promise<Game[]> {
+    
     const filters: any = [];
     if (genre) filters.push({ genre });
     if (favorite) filters.push({favorite: favorite === 'true'})
@@ -38,7 +40,51 @@ export class GamesService {
       $and: filters
       
     }).lean().exec();
-  }
+  } */
+
+    async findAll({
+      genre,
+      favorite,
+      search,
+      visible,
+      limit = 10,
+      offset = 0
+    }: {
+      genre?: Genre;
+      favorite?: boolean | string;
+      search?: string;
+      visible?: boolean | string;
+      limit?: number;
+      offset?: number;
+    }): Promise<{ count: number; pages: number; games: Game[] }> {
+    
+      const filters: any = [];
+      if (genre) filters.push({ genre });
+      if (favorite) filters.push({ favorite: favorite === 'true' });
+      if (search) filters.push({ title: { $regex: search, $options: 'i' } });
+      if (visible) filters.push({ isVisible: visible === 'true' });
+    
+      const query = filters.length > 0 ? { $and: filters } : {};
+    
+      // Obtener juegos paginados
+      const games = await this.gameModel
+        .find(query)
+        .limit(limit)
+        .skip(offset)
+        .sort({ _id: 1 }) // Ordenar por ID ascendente
+        .lean()
+        .exec();
+    
+      // Contar el total de juegos que coinciden con los filtros
+      const totalGames = await this.gameModel.countDocuments(query);
+    
+      return {
+        count: totalGames,
+        pages: Math.ceil(totalGames / limit),
+        games
+      };
+    }
+    
 
 
   /* Busca un juego por su uuid. Ej: ps-gowr */
