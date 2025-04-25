@@ -50,7 +50,7 @@ export class AuthService {
     const { email, password } = loginUserDto;
     const user = await this.userModel.findOne({ email });
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials - email');
     }
 
     if (!bcryptjs.compareSync(password, user.password!)) {

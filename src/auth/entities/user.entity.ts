@@ -21,6 +21,12 @@ isActive: boolean
 @Prop({type: [String], default: ['user']})
 roles: string[]
 
+@Prop({type: [String], default: []})
+library: string[]
+
+@Prop({type: [String], default: []})
+favorites: string[]
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
