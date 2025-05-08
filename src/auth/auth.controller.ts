@@ -26,7 +26,7 @@ export class AuthController {
     return this.authService.register(registerUserDto);
   }
 
-  @UseGuards( AuthGuard )
+  //@UseGuards( AuthGuard )
   @Get()
   findAll( @Request() req: Request ) {
 
@@ -46,6 +46,31 @@ export class AuthController {
       token: this.authService.getJwtToken({ id: user._id! })
     }
   }
+
+
+@Patch(':id/library/:gameId')
+addGameToLibrary(@Param('id') userId: string, @Param('gameId') gameId: string) {
+  return this.authService.addGameToLibrary(userId, gameId);
+}
+
+@Get(':id/library')
+getLibrary(@Param('id') userId: string) {
+  return this.authService.getUserLibrary(userId);
+}
+
+// Eliminar juego de la librería
+@Delete(':id/library/:gameId')
+removeFromLibrary(@Param('id') userId: string, @Param('gameId') gameId: string) {
+  return this.authService.removeGameFromLibrary(userId, gameId);
+}
+
+// Alternar favorito
+@Patch(':id/favorites/:gameId')
+toggleFavorite(@Param('id') userId: string, @Param('gameId') gameId: string) {
+  return this.authService.toggleFavorite(userId, gameId);
+}
+
+
   
 
  /*  @Get(':id')

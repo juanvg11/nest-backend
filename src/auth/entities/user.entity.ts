@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
+import { Types } from "mongoose"
 
 
 @Schema()
@@ -21,11 +22,11 @@ isActive: boolean
 @Prop({type: [String], default: ['user']})
 roles: string[]
 
-@Prop({type: [String], default: []})
-library: string[]
+@Prop({ type: [{ type: Types.ObjectId, ref: 'Game' }], default: [] })
+  library: Types.ObjectId[];
 
-@Prop({type: [String], default: []})
-favorites: string[]
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Game' }], default: [] })
+  favorites: Types.ObjectId[];
 
 }
 

@@ -14,10 +14,6 @@ export class GamesController {
     return this.gamesService.create(createGameDto);
   }
 
-
-
-  
-
   /* @Get()
   findAll(@Query('genre') genre: Genre, @Query('favorite') favorite: boolean, @Query('search') search: string,  @Query('visible') visible: boolean) {
     return this.gamesService.findAll({genre, favorite, search, visible});
@@ -67,6 +63,12 @@ async searchGames(@Param('search') search: string) {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
     return this.gamesService.update(id, updateGameDto);
+  }
+
+  /* Nueva ruta a que en el front no me lega el id */
+  @Patch('uuid/:uuid')
+  updateByUuid(@Param('uuid') uuid: string, @Body() updateGameDto: UpdateGameDto) {
+    return this.gamesService.updateByUuid(uuid, updateGameDto);
   }
 
   @Get('favorite/:favorite')

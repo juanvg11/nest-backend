@@ -9,8 +9,8 @@ export class CreateGameDto {
   @IsString()
   title: string;
 
-  @IsArray()
-  @ArrayMinSize(1)
+ /*  @IsArray()
+  @ArrayMinSize(1) */
   @IsEnum(Platform, { each: true })
   platforms: Platform[];
 

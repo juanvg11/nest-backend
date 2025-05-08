@@ -11,6 +11,7 @@ import { Document } from 'mongoose';
 
  export enum Genre {
     Action = "action",
+    Indie = "indie",
     Adventure = "adventure",
     Shooter = "shooter",
     RPG = "rpg",
@@ -64,14 +65,17 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true }) // Agrega createdAt y updatedAt automáticamente
 export class Game extends Document{
 
+  /* @Prop({ required:true, unique:true})
+  _id: string; */
+
   @Prop({ required:true, unique:true})
   uuid: string;
   
   @Prop({  required: true, unique: true })
   title: string;
 
-  @Prop({ type: [String], enum: Platform, required: true })
-  platforms: Platform[];
+  @Prop({ enum: Platform, required: true })
+  platforms: Platform;
 
   @Prop({ required: true })
   developer: string;
@@ -104,3 +108,13 @@ export class Game extends Document{
 
 // Genera el esquema de Mongoose
 export const GameSchema = SchemaFactory.createForClass(Game);
+
+/* GameSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {
+    ret.id = ret._id.toString();
+    delete ret._id;
+  }
+}); */
+

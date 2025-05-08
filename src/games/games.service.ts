@@ -130,6 +130,26 @@ export class GamesService {
     }
   }
 
+  async updateByUuid(uuid: string, updateGameDto: UpdateGameDto) {
+    try {
+      const updatedGame = await this.gameModel
+        .findOneAndUpdate({uuid}, updateGameDto, { new: true })
+        .lean()
+        .exec();
+      return updatedGame;
+    } catch (error) {
+      if (error.name === 'CastError') {
+        throw new BadRequestException(`El id:${uuid} es erroneo`);
+      }
+
+      if(error.code === 11000){
+        throw new BadRequestException(`${updateGameDto.title} already exists!`);
+      }
+
+      throw new BadRequestException(`Error updating game`);
+    }
+  }
+
 
   /* Elimina un juego por su id */
   async remove(id: string): Promise<Game|null> {
