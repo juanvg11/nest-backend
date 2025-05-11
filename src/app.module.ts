@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GamesModule } from './games/games.module';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
+import { FilesModule } from './files/files.module';
 
 
 
@@ -15,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
     GamesModule,
     CommonModule,
     AuthModule, 
+    FilesModule
     
   ],
   controllers: [],

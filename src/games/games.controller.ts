@@ -3,8 +3,9 @@ import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Game, Genre } from './entities/game.entity';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Games')
 @Controller('games')
 export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
@@ -44,6 +45,12 @@ export class GamesController {
   findOne(@Param('uuid') uuid: string) {
     return this.gamesService.findOne(uuid);
   }
+/* GPT */
+  @Get('by-ids')
+findGamesByIds(@Query('ids') ids: string) {
+  const idArray = ids.split(',').map(id => id.trim());
+  return this.gamesService.findByIds(idArray); // que use find({ _id: { $in: idArray } })
+}
 
 
 

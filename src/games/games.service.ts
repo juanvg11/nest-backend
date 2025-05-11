@@ -103,6 +103,14 @@ export class GamesService {
     }
   }
 
+  /* GPT */
+  async findByIds(ids: string[]): Promise<Game[]> {
+    return this.gameModel.find({ _id: { $in: ids } }).exec();
+  }
+  
+
+  
+
   /* Busca juegos por genero */
   async findByGenre(genre: string): Promise<Game[]> {
     return this.gameModel.find({ genre: genre.toLowerCase() }).lean().exec();
