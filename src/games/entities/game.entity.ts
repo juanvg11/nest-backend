@@ -29,7 +29,8 @@ import { Document } from 'mongoose';
     Stealth = "stealth",
     Survival = "survival",
     MusicRhythm = "music/rhythm",
-    MOBA = "moba"
+    MOBA = "moba",
+    ßOpenWorld = "open-world",//
   }
   
 
@@ -41,6 +42,10 @@ import { Document } from 'mongoose';
   export enum Platform {
     PS5 = "PS5",
     PS4 = "PS4",
+    PS3 = "PS3",
+    PS2 = "PS2",
+    PS1 = "PS1",
+    PSP = "PSP",
     XboxSeriesX = "Xbox Series X",
     XboxSeriesS = "Xbox Series S",
     XboxOne = "Xbox One",

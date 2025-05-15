@@ -1,9 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
-import { Types } from "mongoose"
+import mongoose, { Types } from "mongoose"
+import { Game } from "src/games/entities/game.entity"
 
 
 @Schema()
-export class User {
+export class User{
 
 _id?: string 
 
@@ -25,9 +26,39 @@ roles: string[]
 @Prop({ type: [{ type: Types.ObjectId, ref: 'Game' }], default: [] })
   library: Types.ObjectId[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Game' }], default: [] })
+@Prop({ type: [{ type: Types.ObjectId, ref: 'Game' }], default: [] })
   favorites: Types.ObjectId[];
 
-}
 
-export const UserSchema = SchemaFactory.createForClass(User);
+
+
+  
+   /* Probando rating GPT */
+   
+  
+   
+  }
+  
+  
+  export const UserSchema = SchemaFactory.createForClass(User);
+  
+  favorites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Game'
+  }]
+  
+  
+  /*  @Prop({
+   type: [{
+     gameId: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' },
+     rating: { type: Number, min: 0, max: 10 },
+     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+   }],
+   default: []
+ })
+ favoriteRatings: {
+   gameId: Types.ObjectId;
+   rating: number;
+   userId: Types.ObjectId;
+ }[]; */
+  

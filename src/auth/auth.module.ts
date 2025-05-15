@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { Game, GameSchema } from 'src/games/entities/game.entity';
 
 @Module({
   controllers: [AuthController],
@@ -16,7 +17,9 @@ import { ConfigModule } from '@nestjs/config';
           {
             name: User.name,
             schema: UserSchema
-          }
+          },
+          //{ name: Game.name, schema: GameSchema },
+
         ]),
 
         JwtModule.register({

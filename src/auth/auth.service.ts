@@ -1,13 +1,14 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model, Types } from 'mongoose';
 
 import * as bcryptjs from 'bcryptjs';
-import { LoginUserDto, CreateUserDto, RegisterUserDto } from './dto';
+import { LoginUserDto, CreateUserDto, RegisterUserDto, UpdateUserDto } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload';
 import { LoginResponse } from './interfaces/login-response';
+import { title } from 'process';
 
 
 
@@ -48,7 +49,15 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<LoginResponse> {
     const { email, password } = loginUserDto;
-    const user = await this.userModel.findOne({ email });
+
+    const user = await this.userModel
+    .findOne({ email })
+    .populate({
+    path: 'favorites',
+    model: 'Game', // explícitamente
+  }); // ⭐ Aquí populamos los juegos favoritos
+
+    //const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials - email');
     }
@@ -82,11 +91,23 @@ export class AuthService {
  
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find();
+    const populatedUser = await this.userModel
+    .find()
+    .populate({
+    path: 'favorites',
+    model: 'Game', // explícitamente
+  });
+
+  return populatedUser;
+   
   }
 
   async findUserById(id: string): Promise<User> {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id)
+    .populate({
+    path: 'favorites',
+    model: 'Game', // explícitamente
+  });
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
@@ -94,37 +115,7 @@ export class AuthService {
     return userData;
   }
 
-  async addGameToLibrary(userId: string, gameId: string): Promise<User> {
-    const user = await this.userModel.findById(userId);
-  
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-  
-    const objectId = new Types.ObjectId(gameId);
-  
-    const alreadyInLibrary = user.library.some(id => id.equals(objectId));
-    if (alreadyInLibrary) {
-      throw new BadRequestException('Game already in library');
-    }
-  
-    user.library.push(objectId);
-    await user.save();
-  
-    return user;
-  }
 
-  async removeGameFromLibrary(userId: string, gameId: string): Promise<User> {
-    const user = await this.userModel.findById(userId);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-  
-    user.library = user.library.filter(id => id.toString() !== gameId);
-    await user.save();
-  
-    return user;
-  }
   
 
   async getUserLibrary(userId: string): Promise<User> {
@@ -137,30 +128,110 @@ export class AuthService {
     return user;
   }
 
-  async toggleFavorite(userId: string, gameId: string): Promise<User> {
-    const user = await this.userModel.findById(userId);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-  
-    const gameObjectId = new Types.ObjectId(gameId);
-  
-    const index = user.favorites.findIndex(fav => fav.equals(gameObjectId));
-  
-    if (index >= 0) {
-      // Si ya está, lo quitamos
-      user.favorites.splice(index, 1);
-    } else {
-      // Si no está, lo agregamos
-      user.favorites.push(gameObjectId);
-    }
-  
-    await user.save();
-  
-    return user.populate('favorites'); // ← Si quieres devolver los juegos ya populados
+  async toggleFavorites(userId: string, gameId: string) {
+  const user = await this.userModel.findById(userId);
+
+  if (!user) throw new NotFoundException('Usuario no encontrado');
+
+  const gameObjectId = new Types.ObjectId(gameId);
+
+  const index = user.favorites.findIndex((id) => id.equals(gameObjectId));
+
+  if (index > -1) {
+    user.favorites.splice(index, 1); // Eliminar si ya está
+  } else {
+    user.favorites.push(gameObjectId); // Agregar si no está
   }
-  
-  
+
+  await user.save();
+
+  const populatedUser = await this.userModel
+    .findById(user._id)
+    .populate({
+    path: 'favorites',
+    model: 'Game', // explícitamente
+  });
+    console.log(populatedUser?.favorites)
+
+  return populatedUser;
+}
+
+
+
+/* async updateFavoriteRating(userId: string, gameId: string, rating: number) {
+  const updatedUser =  await this.userModel.findOneAndUpdate(
+    { _id: userId, 'favorites._id': gameId },
+    { $set: { 'favorites.$.rating': rating } },
+    { new: true }
+  );
+   if (!updatedUser) {
+    throw new NotFoundException('Usuario o juego no encontrado');
+  }
+
+  return updatedUser;
+} */
+
+  /* Probando rating GPT */
+
+/* async rateFavoriteGame(userId: string, gameId: string, rating: number) {
+  const user = await this.userModel.findById(userId);
+  if (!user) {
+    throw new NotFoundException('Usuario no encontrado');
+  }
+
+  const userObjectId = new Types.ObjectId(userId);
+  console.log(userObjectId)
+  const gameObjectId = new Types.ObjectId(gameId);
+  const isFavorite = user.favorites.some(fav => fav.toString() === gameId);
+
+  if (!isFavorite) {
+    throw new NotFoundException('El juego no está en favoritos');
+  }
+
+  const existingRating = user.favoriteRatings.find(fav => fav.gameId.toString() === gameId);
+
+  if (existingRating) {
+    existingRating.rating = rating;
+  } else {
+    user.favoriteRatings.push({ gameId: gameObjectId,  rating, userId: userObjectId});
+  }
+
+  await user.save();
+
+  return { message: 'Valoración actualizada correctamente',
+    favoriteRatings: user.favoriteRatings  // Muestra las valoraciones actualizadas
+   };
+} */
+
+
+
+async toggleLibrary(userId: string, gameId: string) {
+  const user = await this.userModel.findById(userId);
+
+  if (!user) throw new NotFoundException('Usuario no encontrado');
+
+  const gameObjectId = new Types.ObjectId(gameId);
+
+  const index = user.library.findIndex((id) => id.equals(gameObjectId));
+
+  if (index > -1) {
+    user.library.splice(index, 1); // Eliminar si ya está
+  } else {
+    user.library.push(gameObjectId); // Agregar si no está
+  }
+
+  await user.save();
+
+  const populatedUser = await this.userModel
+    .findById(user._id)
+    .populate({
+    path: 'library',
+    model: 'Game', // explícitamente
+  });
+    console.log(populatedUser?.library)
+
+  return populatedUser;
+}
 
 
   
@@ -182,4 +253,7 @@ export class AuthService {
     return token;
 
   }
+
+
+ 
 }

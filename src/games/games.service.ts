@@ -190,6 +190,21 @@ export class GamesService {
     return updatedGame;
   }
 
+     /* async markAsFavorite(id: string, updateGameDto: UpdateGameDto): Promise<Game> {
+    // Actualiza el campo 'favorite' a true para marcarlo como favorito
+    const updatedGame = await this.gameModel.findByIdAndUpdate(
+      { id },
+      { favorite: updateGameDto.favorite },
+      { new: true }
+    ).lean().exec();
+  
+    if (!updatedGame) {
+      throw new NotFoundException(`Game with UUID ${id} not found`);
+    }
+  
+    return updatedGame;
+  } */
+
   /* Marca un juego como visible */
   async markAsVisible(uuid: string, updateGameDto: UpdateGameDto): Promise<Game> {
     // Actualiza el campo 'favorite' a true para marcarlo como favorito
