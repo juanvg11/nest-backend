@@ -25,6 +25,8 @@ export class GamesService {
     }
   }
 
+  
+
 
   /* Recupera todos los juegos de la BD
      Mejora: implementar paginacion con .skip() y .limit() */
@@ -167,6 +169,7 @@ export class GamesService {
       if (!deletedGame) {
         throw new NotFoundException(`Game with ID ${id} not found`);
     }
+    console.log("Juego eliminado correctamente");
       return deletedGame;
     } catch (error) {
       throw new InternalServerErrorException(`Error deleting game with ID ${id}`);
