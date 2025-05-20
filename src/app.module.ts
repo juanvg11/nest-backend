@@ -12,7 +12,9 @@ import { FilesModule } from './files/files.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_URI!),
+    MongooseModule.forRoot(process.env.MONGO_URI!, {
+      dbName: process.env.MONGO_DB_NAME,
+    }),
     GamesModule,
     CommonModule,
     AuthModule, 
